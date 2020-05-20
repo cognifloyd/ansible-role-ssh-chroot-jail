@@ -15,6 +15,12 @@
     creates: "{{ ssh_chroot_jail_path }}/dev/{{ item.dev }}"
   with_items: "{{ ssh_chroot_jail_devs }}"
 
+- name: Ensure jail devices get created after reboot
+  template:
+    src: ssh-chroot.conf.j2
+    dest: "{{ ssh_chroot_tmpfiles_conf_path }}"
+  when: "ansible_service_mgr == 'systemd'"
+
 - include_tasks: l2chroot.yml
 
 - name: Ensure binaries are copied into the jail.
